@@ -50,7 +50,7 @@ module Slugger
       else
         send(self.slugger)
       end
-      generated_slug = generated_slug.downcase.gsub('.','').gsub(/[^a-zA-Z0-9\/]/, '-')
+      generated_slug = generated_slug.parameterize
       update_column(:slug, generated_slug) if slug != generated_slug
     end
 

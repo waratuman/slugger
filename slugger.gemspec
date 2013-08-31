@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["James R. Bracy"]
   spec.email         = ["waratuman@gmail.com"]
   spec.description   = %q{Rails plugin for slugging models.}
-  spec.summary       = %q{Rails plugin for slugging models.}
-  spec.homepage      = ""
+  spec.summary       = %q{Simple slugging for Rails models}
+  spec.homepage      = "http://github.com/waratuman/slugger"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
