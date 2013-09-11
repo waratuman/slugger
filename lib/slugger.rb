@@ -15,7 +15,7 @@ module Slugger
       friendly = -> (arg) { arg.respond_to?(:to_i) && arg.to_i.to_s != arg.to_s }
 
       if args.count == 1 && friendly.call(args.first)
-        find_by_slug(args)
+        find_by_slug!(args)
       else
         super
       end

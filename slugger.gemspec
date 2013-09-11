@@ -1,11 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'slugger/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "slugger"
-  spec.version       = Slugger::VERSION
+  spec.version       = '0.0.2'
   spec.authors       = ["James R. Bracy"]
   spec.email         = ["waratuman@gmail.com"]
   spec.description   = %q{Rails plugin for slugging models.}
