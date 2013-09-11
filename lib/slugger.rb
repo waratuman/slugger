@@ -1,5 +1,3 @@
-require 'slugger/version'
-
 module Slugger
 
   def self.included(klass)
