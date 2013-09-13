@@ -24,7 +24,12 @@ class SluggerTest < MiniTest::Unit::TestCase
   test 'slug' do
     book = Book.new(:title => 'The Picture of Dorian Gray')
     book.save
-    assert 'this-picture-of-dorian-gray', book.slug
+    assert_equal 'the-picture-of-dorian-gray', book.slug
+
+    book = Book.new(:title => 'The Picture/of Dorian Gray')
+    book.save
+    assert_equal 'the-picture/of-dorian-gray', book.slug
+    
   end
 
   test 'finders' do
