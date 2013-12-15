@@ -3,8 +3,6 @@ module Slugger
   def self.included(klass)
     klass.send :extend, ClassMethods
     klass.send :include, InstanceMethods
-
-    klass.after_save :set_slug
   end
 
   module FinderMethods
@@ -23,8 +21,9 @@ module Slugger
 
   module ClassMethods
 
-    def slug(method, &block)
-      self.slugger = method || block
+    def slug(method, options={}, &block)
+      self.slugger = { :proc => method || block, :options => options }
+      self.send(options[:trigger] || :after_save, :set_slug)
     end
 
 
@@ -39,17 +38,22 @@ module Slugger
   module InstanceMethods
 
     def set_slug
-      generated_slug = if self.slugger.is_a?(Proc)
-        if (self.slugger.arity == 1)
-          self.slugger.call(self)
+      generated_slug = if self.slugger[:proc].is_a?(Proc)
+        if (self.slugger[:proc].arity == 1)
+          self.slugger[:proc].call(self)
         else
-          self.slugger.call
+          self.slugger[:proc].call
         end
       else
-        send(self.slugger)
+        send(self.slugger[:proc])
       end
       generated_slug = generated_slug.split('/').map(&:parameterize).join('/')
-      update_column(:slug, generated_slug) if slug != generated_slug
+
+      if self.slugger[:options][:trigger] == :before_save
+        self.slug = generated_slug
+      else
+        update_column(:slug, generated_slug) if slug != generated_slug
+      end
     end
 
   end

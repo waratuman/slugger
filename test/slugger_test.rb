@@ -29,13 +29,36 @@ class SluggerTest < MiniTest::Unit::TestCase
     book = Book.new(:title => 'The Picture/of Dorian Gray')
     book.save
     assert_equal 'the-picture/of-dorian-gray', book.slug
-    
   end
 
   test 'finders' do
     book = Book.new(:title => 'The Picture of Dorian Gray')
     book.save
     assert Book.find('the-picture-of-dorian-gray')
+  end
+
+  test 'set_slug is called before_save' do
+    klass = Class.new(ActiveRecord::Base) {
+      self.table_name = 'books'
+      include Slugger
+      slug -> (b) { b.id.to_s }, :trigger => :before_save
+    }
+
+    object = klass.new
+    object.save
+    assert_equal "", object.slug
+  end
+
+  test 'set_slug is called after_save' do
+    klass = Class.new(ActiveRecord::Base) {
+      self.table_name = 'books'
+      include Slugger
+      slug -> (b) { b.id.to_s }, :trigger => :after_save
+    }
+
+    object = klass.new
+    object.save
+    assert_equal object.id.to_s, object.slug
   end
 
 end
