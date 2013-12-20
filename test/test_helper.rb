@@ -3,11 +3,11 @@ require 'bundler/setup'
 require 'sqlite3'
 require 'active_record'
 require 'minitest/unit'
-require 'turn/autorun'
+require 'minitest/autorun'
 require 'slugger'
 
 module Slugger::Test
-  
+
   module Database
     extend self
 
@@ -17,7 +17,7 @@ module Slugger::Test
         database: ":memory:"
         encoding: utf8
       CONFIG
-      
+
       ActiveRecord::Migration.verbose = false
       Schema.migrate :up
     end
@@ -47,7 +47,7 @@ module Slugger::Test
 end
 
 class Module
-  
+
   def test(name, &block)
     define_method("test_#{name.gsub(/[^a-z0-9']/i, "_")}".to_sym, &block)
   end
