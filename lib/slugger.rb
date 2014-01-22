@@ -25,7 +25,7 @@ module Slugger
       options[:trigger] ||= :after_save
       self.slugger = { :proc => method || block, :options => options }
       self.send(options[:trigger], :set_slug)
-      self.include Slugger::History if options[:history]
+      self.send(:include, Slugger::History) if options[:history]
     end
 
 
