@@ -1,12 +1,12 @@
 require 'test_helper'
 
-class Book < ActiveRecord::Base
-  include Slugger
-
-  slug :title
-end
-
 class SluggerTest < MiniTest::Unit::TestCase
+
+  class Book < ActiveRecord::Base
+    include Slugger
+
+    slug :title
+  end
 
   test 'model doesn\'t use slugger by default' do
     assert !Class.new(ActiveRecord::Base) {

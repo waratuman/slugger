@@ -36,6 +36,17 @@ module Slugger::Test
         t.string  :author
         t.string  :slug, :unique => true
       end
+      create_table :movies do |t|
+        t.string  :title
+        t.string  :author
+        t.string  :slug, :unique => true
+      end
+      create_table :slugs do |t|
+        t.string   :model_type, :null => false
+        t.integer  :model_id,   :null => false
+        t.string   :slug,       :null => false
+        t.timestamps
+      end
     end
 
     def self.down

@@ -22,8 +22,10 @@ module Slugger
   module ClassMethods
 
     def slug(method, options={}, &block)
+      options[:trigger] ||= :after_save
       self.slugger = { :proc => method || block, :options => options }
-      self.send(options[:trigger] || :after_save, :set_slug)
+      self.send(options[:trigger], :set_slug)
+      self.include Slugger::History if options[:history]
     end
 
 
@@ -59,3 +61,6 @@ module Slugger
   end
 
 end
+
+require 'slugger/slug'
+require 'slugger/history'
