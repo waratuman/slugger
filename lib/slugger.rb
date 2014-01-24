@@ -51,6 +51,10 @@ module Slugger
       end
       generated_slug = generated_slug.split('/').map(&:parameterize).join('/')
 
+      if self.slugger[:options][:history]
+        self.slugger[:slug_was] = self.slug
+      end
+
       if self.slugger[:options][:trigger] == :before_save
         self.slug = generated_slug
       else

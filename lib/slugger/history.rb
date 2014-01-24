@@ -9,8 +9,8 @@ module Slugger
     module InstanceMethods
 
       def set_slug_history
-        if Slugger::Slug.where(:slug => slug, :model_id => self.id, :model_type => self.class.to_s).count == 0
-          Slugger::Slug.create(model: self, slug: slug)
+        if self.slugger[:slug_was] && self.slugger[:slug_was] != self.slug
+          Slugger::Slug.create(model: self, slug: self.slugger[:slug_was])
         end
       end
 
