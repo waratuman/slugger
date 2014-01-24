@@ -65,4 +65,17 @@ class SluggerHistoryTest < MiniTest::Unit::TestCase
     assert_equal ['the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
   end
 
+  test 'slug history added on destroy' do
+    movie = Movie.create(:title => 'The Picture of Dorian Gray')
+    assert_equal 'the-picture-of-dorian-gray', movie.slug
+
+    movie.title = 'Serenity'
+    movie.save
+    assert_equal 'serenity', movie.slug
+    assert_equal ['the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
+
+    movie.destroy
+    assert_equal ['serenity', 'the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
+  end
+
 end

@@ -4,13 +4,15 @@ module Slugger
     def self.included(klass)
       klass.send :include, InstanceMethods
       klass.send :after_save, :set_slug_history
+      klass.send :before_destroy, :set_slug
+      klass.send :after_destroy, :set_slug_history
     end
 
     module InstanceMethods
 
       def set_slug_history
-        if self.slugger[:slug_was] && self.slugger[:slug_was] != self.slug
-          Slugger::Slug.create(model: self, slug: self.slugger[:slug_was])
+        if self.slugger[:slug_was] && (self.slugger[:slug_was] != self.slug || self.destroyed?)
+          Slugger::Slug.create(model_type: self.class.to_s, model_id: self.id, slug: self.slugger[:slug_was])
         end
       end
 
