@@ -22,12 +22,12 @@ module Slugger
   module ClassMethods
 
     def slug(method, options={}, &block)
+      options = options.with_indifferent_access
       options[:trigger] ||= :after_save
       self.slugger = { :proc => method || block, :options => options }
       self.send(options[:trigger], :set_slug)
       self.send(:include, Slugger::History) if options[:history]
     end
-
 
     def self.extended(klass)
       klass.send(:class_attribute, :slugger)
