@@ -12,7 +12,7 @@ module Slugger
 
       def set_slug_history
         if self.slugger[:slug_was] && (self.slugger[:slug_was] != self.slug || self.destroyed?)
-          Slugger::Slug.create(model_type: self.class.to_s, model_id: self.id, slug: self.slugger[:slug_was])
+          Slugger::Slug.create(model_type: self.class.name, model_id: self.id, slug: self.slugger[:slug_was])
         end
       end
 
