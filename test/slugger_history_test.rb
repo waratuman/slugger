@@ -20,10 +20,10 @@ class SluggerHistoryTest < MiniTest::Unit::TestCase
     Slugger::Slug.delete_all
   end
 
-  test 'slug history not added on create (before_save callback)' do
+  test 'slug history added on create (before_save callback)' do
     book = Book.create(:title => 'The Picture of Dorian Gray')
     assert_equal 'the-picture-of-dorian-gray', book.slug
-    assert_equal nil, Slugger::Slug.first
+    assert_equal 'the-picture-of-dorian-gray', Slugger::Slug.first.slug
   end
 
   test 'slug history added on update (before_save callback)' do
@@ -33,13 +33,13 @@ class SluggerHistoryTest < MiniTest::Unit::TestCase
     book.title = 'Serenity'
     book.save
     assert_equal 'serenity', book.slug
-    assert_equal ['the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
+    assert_equal ['serenity', 'the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
   end
 
   test 'slug history added on create (after_save callback)' do
     movie = Movie.create(:title => 'The Picture of Dorian Gray')
     assert_equal 'the-picture-of-dorian-gray', movie.slug
-    assert_equal nil, Slugger::Slug.first
+    assert_equal 'the-picture-of-dorian-gray', Slugger::Slug.first.slug
   end
 
   test 'slug history added on update (after_save callback)' do
@@ -49,7 +49,7 @@ class SluggerHistoryTest < MiniTest::Unit::TestCase
     movie.title = 'Serenity'
     movie.save
     assert_equal 'serenity', movie.slug
-    assert_equal ['the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
+    assert_equal ['serenity', 'the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
   end
 
   test 'slug history isn\'t added if slug didn\'t change' do
@@ -59,10 +59,10 @@ class SluggerHistoryTest < MiniTest::Unit::TestCase
     movie.title = 'Serenity'
     movie.save
     assert_equal 'serenity', movie.slug
-    assert_equal ['the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
+    assert_equal ['serenity', 'the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
     
     movie.save
-    assert_equal ['the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
+    assert_equal ['serenity', 'the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
   end
 
   test 'slug history added on destroy' do
@@ -72,7 +72,7 @@ class SluggerHistoryTest < MiniTest::Unit::TestCase
     movie.title = 'Serenity'
     movie.save
     assert_equal 'serenity', movie.slug
-    assert_equal ['the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
+    assert_equal ['serenity', 'the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
 
     movie.destroy
     assert_equal ['serenity', 'the-picture-of-dorian-gray'], Slugger::Slug.all.map(&:slug)
