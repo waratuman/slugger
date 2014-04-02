@@ -49,6 +49,42 @@ class SluggerTest < MiniTest::Unit::TestCase
     assert_equal "", object.slug
   end
 
+  test 'set_slug is called before_validation' do
+    klass = Class.new(ActiveRecord::Base) {
+      self.table_name = 'books'
+      include Slugger
+      slug -> (b) { b.id.to_s }, :trigger => :before_validation
+    }
+
+    object = klass.new
+    object.valid?
+    assert_equal "", object.slug
+  end
+
+  test 'set_slug is called after_validation' do
+    klass = Class.new(ActiveRecord::Base) {
+      self.table_name = 'books'
+      include Slugger
+      slug -> (b) { b.id.to_s }, :trigger => :after_validation
+    }
+
+    object = klass.new
+    object.valid?
+    assert_equal "", object.slug
+  end
+
+  test 'set_slug is called before_create' do
+    klass = Class.new(ActiveRecord::Base) {
+      self.table_name = 'books'
+      include Slugger
+      slug -> (b) { b.id.to_s }, :trigger => :before_create
+    }
+
+    object = klass.new
+    object.save
+    assert_equal "", object.slug
+  end
+
   test 'set_slug is called after_save' do
     klass = Class.new(ActiveRecord::Base) {
       self.table_name = 'books'

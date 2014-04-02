@@ -55,7 +55,7 @@ module Slugger
         self.slugger[:slug_was] = self.slug
       end
 
-      if self.slugger[:options][:trigger] == :before_save
+      if [:before_validation, :after_validation, :before_save, :before_create].include?(self.slugger[:options][:trigger])
         self.slug = generated_slug
       else
         update_column(:slug, generated_slug) if slug != generated_slug
