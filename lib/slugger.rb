@@ -49,7 +49,7 @@ module Slugger
       else
         send(self.slugger[:proc])
       end
-      generated_slug = generated_slug.split('/').map(&:parameterize).join('/')
+      generated_slug = generated_slug ? generated_slug.split('/').map(&:parameterize).join('/') : nil
 
       if self.slugger[:options][:history]
         self.slugger[:slug_was] = self.slug
