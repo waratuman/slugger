@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'sqlite3'
-require 'active_record'
-require 'minitest/unit'
+require 'rails'
 require 'minitest/autorun'
 require 'slugger'
+require 'byebug'
 
 module Slugger::Test
 
@@ -31,9 +31,12 @@ module Slugger::Test
   class Schema < ActiveRecord::Migration
 
     def self.up
+      create_table :authors do |t|
+        t.string  :name
+      end
       create_table :books do |t|
         t.string  :title
-        t.string  :author
+        t.integer  :author_id
         t.string  :slug, :unique => true
       end
       create_table :movies do |t|
@@ -45,7 +48,7 @@ module Slugger::Test
         t.string   :model_type, :null => false
         t.integer  :model_id,   :null => false
         t.string   :slug,       :null => false
-        t.timestamps
+        t.timestamps null: false
       end
     end
 

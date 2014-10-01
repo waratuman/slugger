@@ -1,11 +1,21 @@
 require 'test_helper'
 
-class SluggerTest < MiniTest::Unit::TestCase
+class SluggerTest < Minitest::Test
 
   class Book < ActiveRecord::Base
     include Slugger
-
     slug :title
+    belongs_to :author
+  end
+
+  class Author < ActiveRecord::Base
+    has_many :books
+
+  end
+
+  def setup
+    Book.delete_all
+    Author.delete_all
   end
 
   test 'model doesn\'t use slugger by default' do
@@ -31,10 +41,34 @@ class SluggerTest < MiniTest::Unit::TestCase
     assert_equal 'the-picture/of-dorian-gray', book.slug
   end
 
-  test 'finders' do
-    book = Book.new(:title => 'The Picture of Dorian Gray')
-    book.save
-    assert Book.find('the-picture-of-dorian-gray')
+  test 'to_param' do
+    book = Book.create(:title => 'The Picture of Dorian Gray')
+    assert_equal 'the-picture-of-dorian-gray', book.to_param
+  end
+
+  test 'ActiveRecord::Relation::find_one' do
+    book = Book.create(:title => 'The Picture of Dorian Gray')
+    assert_equal book, Book.find('the-picture-of-dorian-gray')
+    assert_equal book, Book.find(book.id)
+  end
+
+  test 'ActiveRecord::Relation::exists?' do
+    book = Book.create(:title => 'The Picture of Dorian Gray')
+    assert Book.exists?('the-picture-of-dorian-gray')
+    assert Book.exists?(book.id)
+  end
+
+  test 'ActiveRecord::Relation::find_some' do
+    b1 = Book.create(:title => 'The Picture of Dorian Gray')
+    b2 = Book.create(:title => 'The Lion, the Witch and the Wardrobe')
+    assert_equal [b1,b2], Book.find('the-picture-of-dorian-gray', 'the-lion-the-witch-and-the-wardrobe')
+    assert_equal [b1,b2], Book.find(b1.id, b2.id)
+  end
+
+  test 'finders through association' do
+    author = Author.create(name: 'Oscar Wilde')
+    book = Book.create(title: 'The Picture of Dorian Gray', author: author)
+    assert author.books.find('the-picture-of-dorian-gray')
   end
 
   test 'set_slug is called before_save' do

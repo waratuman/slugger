@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "slugger"
-  spec.version       = '0.0.3'
+  spec.version       = '0.1.0'
   spec.authors       = ["James R. Bracy"]
   spec.email         = ["waratuman@gmail.com"]
   spec.description   = %q{Rails plugin for slugging models.}
@@ -17,10 +17,14 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'activerecord', '~> 4.0'
+  spec.add_dependency 'activerecord',  '~> 4.2.0.beta2'
+  spec.add_dependency 'activesupport', '~> 4.2.0.beta2'
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'sqlite3'
+  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'rails', '~> 4.2.0.beta2'
+
 end
