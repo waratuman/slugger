@@ -3,7 +3,7 @@ module Slugger
 
     def find_one(id)
       friendly = id.respond_to?(:to_i) && id.to_i.to_s != id.to_s
-      friendly ? find_by_slug(id) : super
+      friendly ? find_by_slug!(id) : super
     end
 
     def find_some(ids)
