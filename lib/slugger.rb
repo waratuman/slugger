@@ -5,8 +5,8 @@ module Slugger
 
   included do
     class_attribute :slugger
-    ::ActiveRecord::Base.send :include, Slugger::ActiveRecordBaseSluggerExtension
-    ::ActiveRecord::Relation.send :include, Slugger::ActiveRecordRelationSluggerExtension
+    send :include, Slugger::ActiveRecordBaseSluggerExtension
+    relation.send :include, Slugger::ActiveRecordRelationSluggerExtension
   end
 
 end
