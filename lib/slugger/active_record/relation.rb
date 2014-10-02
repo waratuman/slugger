@@ -32,11 +32,6 @@ module Slugger
         end
       end
 
-      def exists?(id=false)
-        friendly = id.respond_to?(:to_i) && id.to_i.to_s != id.to_s
-        friendly ? super(slug: id) : super
-      end
-
     end
   end
 end

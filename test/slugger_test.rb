@@ -52,12 +52,6 @@ class SluggerTest < Minitest::Test
     assert_equal book, Book.find(book.id)
   end
 
-  test 'ActiveRecord::Relation::exists?' do
-    book = Book.create(:title => 'The Picture of Dorian Gray')
-    assert Book.exists?('the-picture-of-dorian-gray')
-    assert Book.exists?(book.id)
-  end
-
   test 'ActiveRecord::Relation::find_some' do
     b1 = Book.create(:title => 'The Picture of Dorian Gray')
     b2 = Book.create(:title => 'The Lion, the Witch and the Wardrobe')
