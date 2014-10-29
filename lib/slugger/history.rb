@@ -4,7 +4,6 @@ module Slugger
     def self.included(klass)
       klass.send :include, InstanceMethods
       klass.send :after_save, :set_slug_history
-      klass.send :before_destroy, :set_slug
       klass.send :after_destroy, :set_slug_history
       klass.send(:after_create, :set_slug_history_after_create) if klass.slugger[:options][:trigger] == :after_save
     end
