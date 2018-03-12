@@ -12,11 +12,13 @@ module Slugger::Test
     extend self
 
     def connect
-      ActiveRecord::Base.establish_connection(YAML::load(<<-CONFIG))
-        adapter: sqlite3
-        database: ":memory:"
-        encoding: utf8
-      CONFIG
+      # ActiveRecord::Base.logger = Logger.new(STDOUT)
+      # ActiveRecord::Base.logger.level = Logger::DEBUG
+
+      ActiveRecord::Base.establish_connection(
+        adapter: 'postgresql',
+        database: 'slugger_test'
+      )
 
       ActiveRecord::Migration.verbose = false
       Schema.migrate :up
@@ -28,28 +30,38 @@ module Slugger::Test
 
   end
 
-  class Schema < ActiveRecord::Migration
+  class Schema < ActiveRecord::Migration[5.2]
 
     def self.up
+      enable_extension 'pgcrypto'
+
+      execute <<-SQL
+        DROP TABLE IF EXISTS authors, books, movies, slugs;
+      SQL
+
       create_table :authors do |t|
         t.string  :name
       end
+
       create_table :books do |t|
         t.string  :title
         t.integer  :author_id
         t.string  :slug, :unique => true
       end
-      create_table :movies do |t|
+
+      create_table :movies, id: :uuid  do |t|
         t.string  :title
         t.string  :author
         t.string  :slug, :unique => true
       end
+
       create_table :slugs do |t|
         t.string   :model_type, :null => false
         t.integer  :model_id,   :null => false
         t.string   :slug,       :null => false
         t.timestamps null: false
       end
+
     end
 
     def self.down

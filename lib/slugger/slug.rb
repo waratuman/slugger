@@ -1,6 +1,6 @@
 module Slugger
   class Slug < ActiveRecord::Base
-    table_name = 'slugs'
+    self.table_name = 'slugs'
 
     belongs_to :model, polymorphic: true
 
