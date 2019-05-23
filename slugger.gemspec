@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'railties', '~> 5.2.0.rc1'
-  spec.add_dependency 'activerecord',  '~> 5.2.0.rc1'
+  spec.add_dependency 'activerecord',  '>= 5.2', '< 6.1'
   spec.add_dependency 'activesupport', '~> 5.2.0.rc1'
 
   spec.add_development_dependency "bundler", "~> 1.3"
