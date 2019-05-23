@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'railties', '~> 5.2.0.rc1'
+  spec.add_dependency 'railties', '>= 5.2', '< 6.1'
   spec.add_dependency 'activerecord',  '~> 5.2.0.rc1'
   spec.add_dependency 'activesupport', '~> 5.2.0.rc1'
 
