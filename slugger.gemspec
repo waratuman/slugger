@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "slugger"
-  spec.version       = '0.1.1'
+  spec.version       = '0.1.2'
   spec.authors       = ["James R. Bracy"]
   spec.email         = ["waratuman@gmail.com"]
   spec.description   = %q{Rails plugin for slugging models.}

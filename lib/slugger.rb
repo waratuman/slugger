@@ -48,18 +48,9 @@ module Slugger
     end
 
     def find(*ids)
-      id_m = case columns_hash[primary_key].type
-      when 'uuid', :uuid
-        Slugger::ID::UUID
-      when 'integer', :integer
-        Slugger::ID::Integer
-      else
-        raise "Unsupported column type for slugger."
-      end
-
       ids = ids.flatten.compact.uniq
 
-      friendly = ids.all? { |id| id_m.friendly?(id) }
+      friendly = ids.all? { |id| Slugger::ID.friendly?(self, id) }
 
       if !friendly
         return super
@@ -71,7 +62,6 @@ module Slugger
     end
 
   end
-
 end
 
 require 'slugger/slug'
@@ -80,4 +70,53 @@ require 'slugger/active_record/relation'
 
 class ActiveRecord::AssociationRelation
   include Slugger::ActiveRecord::Relation
+end
+
+class ActiveRecord::Relation
+
+  def find_one(id)
+    if !Slugger::ID.friendly?(self, id)
+      return super
+    end
+
+    relation = where(slug: id)
+    record = relation.take
+
+    raise_record_not_found_exception!(id, 0, 1) unless record
+
+    record
+  end
+
+  def find_some(ids)
+    ids = ids.flatten.compact.uniq
+
+    friendly = ids.all? { |id| Slugger::ID.friendly?(self, id) }
+
+    if !friendly
+      return super
+    end
+
+    return find_some_ordered(ids) unless order_values.present?
+
+    result = where(slug: ids).to_a
+
+    expected_size =
+      if limit_value && ids.size > limit_value
+        limit_value
+      else
+        ids.size
+      end
+
+    # 11 ids with limit 3, offset 9 should give 2 results.
+    if offset_value && (ids.size - offset_value < expected_size)
+      expected_size = ids.size - offset_value
+    end
+
+    if result.size == expected_size
+      result
+    else
+      raise_record_not_found_exception!(ids, result.size, expected_size)
+    end
+  end
+  # include Slugger::ActiveRecord::Relation
 end

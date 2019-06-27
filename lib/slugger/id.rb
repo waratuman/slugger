@@ -1,6 +1,19 @@
 module Slugger
   module ID
 
+    def self.friendly?(klass, id)
+      id_m = case klass.columns_hash[klass.primary_key].type
+      when 'uuid', :uuid
+        Slugger::ID::UUID
+      when 'integer', :integer
+        Slugger::ID::Integer
+      else
+        raise "Unsupported column type for slugger."
+      end
+  
+      id_m.friendly?(id)
+    end
+
     module Integer
       def self.friendly?(value)
         value.respond_to?(:to_i) && value.to_i.to_s != value.to_s
