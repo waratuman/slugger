@@ -36,6 +36,14 @@ Example with history:
       slug :title, history: true
     end
 
+Example with lambda:
+
+    class Move < ActiveRecord::Base
+      include Slugger
+    
+      slug -> (m) { m.name.split(/\s+/).map(&:parameterize).reverse.join('/') }
+    end
+    
 Now in ApplicationController you can redirect old slugs:
 
     rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
