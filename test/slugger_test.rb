@@ -71,7 +71,7 @@ class SluggerTest < Minitest::Test
     # a0ee-bc99-9c0b-4ef8-bb6d-6bb9-bd38-0a11    
     assert_equal movie, Movie.find(id.gsub('-', '').scan(/(.{4})/).join('-')) 
     # {a0eebc99-9c0b4ef8-bb6d6bb9-bd380a11}
-    assert_equal movie, Movie.find("{" + id.gsub('-', '').scan(/(.{8})/).join('-') + "}") 
+    assert_equal movie, Movie.find("{" + id.gsub('-', '').scan(/(.{8})/).join('-') + "}")
   end
 
   test 'ActiveRecord::Relation::find_some' do
@@ -168,4 +168,10 @@ class SluggerTest < Minitest::Test
     assert_equal object.id.to_s, object.slug
   end
 
+  test "relation.find on a model that does not use slugger" do
+    Author.create(name: 'Oscar Wilde')
+    assert_raises ActiveRecord::RecordNotFound do
+      Author.all.find('oscar-wilde')
+    end
+  end
 end

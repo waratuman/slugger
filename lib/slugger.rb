@@ -1,4 +1,5 @@
 require 'active_record'
+require 'active_record/relation'
 require 'slugger/id'
 
 module Slugger
@@ -75,7 +76,7 @@ end
 class ActiveRecord::Relation
 
   def find_one(id)
-    if !Slugger::ID.friendly?(self, id)
+    if !self.column_names.include?('slug') || !Slugger::ID.friendly?(self, id)
       return super
     end
 
